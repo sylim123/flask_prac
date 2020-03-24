@@ -22,7 +22,7 @@ def shutdown_session(exception=None):
 @app.route('/')
 def start():
     now = datetime.datetime.now()
-    return render_template('start.html', now=now)
+    return render_template('start.html', nav='start', now=now)
 
 @app.route('/draw')
 def draw():
@@ -70,7 +70,7 @@ def create_restaurant():
 def restaurant_list():
     restaurants = Restaurants.query.all()
 
-    return render_template('restaurant.html', restaurants=restaurants)
+    return render_template('restaurant.html', nav='restaurant', restaurants=restaurants)
 
 
 @app.route('/edit-restaurant', methods=['GET', 'POST'])
@@ -113,14 +113,14 @@ def delete_restaurant():
 def history():
     histories = Histories.query.order_by(desc(Histories.created_time)).limit(20)
 
-    return render_template('history.html', histories=histories)
+    return render_template('history.html', nav='history', histories=histories)
 
 
 @app.route('/top')
 def top():
     restaurants = Restaurants.query.order_by(desc(Restaurants.draw)).limit(5)
 
-    return render_template('top.html', restaurants=restaurants)
+    return render_template('top.html', nav='top', restaurants=restaurants)
 
 
 def meal_format(value):
