@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from database import db_session, init_db
 from models.restaurants import Restaurants
+from models.histories import Histories
 import datetime
 from random import choice
 
@@ -31,9 +32,17 @@ def draw():
 
     random_restaurant = choice(restaurants)
 
-    restaurant = Restaurants.query.get(random_restaurant.id)
-    restaurant.draw += 1
-    db_session.commit()
+    try:
+        restaurant = Restaurants.query.get(random_restaurant.id)
+        restaurant.draw += 1
+
+        history = Histories(restaurant_id=restaurant.id)
+
+        db_session.add(history)
+        db_session.commit()
+    except:
+        db_session.rollback()
+        return redirect('/')
 
     now = datetime.datetime.now()
 
